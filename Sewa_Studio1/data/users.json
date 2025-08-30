@@ -1,0 +1,34 @@
+[
+    {
+        "id": "68aad4d7bdc58",
+        "name": "admin",
+        "email": "admin@test.com",
+        "password": "$2y$12$6sa6QnD99uGPraXQkvLjnuxezMLH.C5fyFg8cZ7m0TkzxfpcmCtTG",
+        "membership": "VVIP",
+        "saldo": 10000
+    },
+    {
+        "id": "68abfed78e1af",
+        "name": "salman",
+        "email": "tewst@gmail.com",
+        "password": "$2y$12$XjEABkYr3Ijk6O1aIdOkfulccF4vp7\/xO7bD4\/cgx38j9NfJzX31m",
+        "membership": "VVIP",
+        "saldo": 12000100000
+    },
+    {
+        "id": "68ac07402e42b",
+        "name": "KONICIWA",
+        "email": "arigatou@gmail.com",
+        "password": "$2y$12$LFmFfD9ZmwOwYMpp7GJgYeQSIGdrcLb2JLShjVdwDLdHCecT\/Uf.m",
+        "membership": "Regular",
+        "saldo": 125000
+    },
+    {
+        "id": "68ac0dba39159",
+        "name": "bebas",
+        "email": "bebas@gmail.com",
+        "password": "$2y$12$4EgscxRVArVKc7xNco\/CDOGparkSO1hOgWjk63asUT7UZrskuPTGO",
+        "membership": "VVIP",
+        "saldo": 176500
+    }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Studio1",
+    "price": 50000,
+    "facilities": "Drum standar, Gitar listrik, Bass, Mic standar",
+    "image": "assets/studio1.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Studio2",
+    "price": 100000,
+    "facilities": "Drum Pearl, Gitar Fender, Mic Shure",
+    "image": "assets/studio2.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Studio3",
+    "price": 200000,
+    "facilities": "Drum DW, Gitar Gibson Les Paul, Keyboard Korg, Mic Neumann, Akustik kedap",
+    "image": "assets/studio3.jpg"
+  }
+]
