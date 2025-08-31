@@ -1,0 +1,53 @@
+-- Database: rental_studio
+CREATE DATABASE IF NOT EXISTS rental_studio;
+USE rental_studio;
+
+-- Table: users
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    membership ENUM('Regular', 'VIP', 'VVIP') DEFAULT 'Regular',
+    saldo DECIMAL(12,2) DEFAULT 0.00,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Table: studios
+CREATE TABLE studios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    facilities TEXT,
+    image VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table: bookings
+CREATE TABLE bookings (
+    id VARCHAR(50) PRIMARY KEY,
+    user_id INT NOT NULL,
+    studio_id INT NOT NULL,
+    booking_date DATE NOT NULL,
+    booking_time TIME NOT NULL,
+    duration INT NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    cashback DECIMAL(10,2) DEFAULT 0.00,
+    status ENUM('pending', 'confirmed', 'cancelled') DEFAULT 'confirmed',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (studio_id) REFERENCES studios(id) ON DELETE CASCADE
+);
+
+-- Insert sample studios
+INSERT INTO studios (name, price, facilities, image) VALUES
+('Studio A', 50000.00, 'Drum set, Gitar, Bass, Mic', 'assets/studio1.jpg'),
+('Studio B', 100000.00, 'Full Band Set + Mixer', 'assets/studio2.jpg'),
+('Studio C', 200000.00, 'Pro Equipment', 'assets/studio3.jpg');
+
+-- Insert sample users
+INSERT INTO users (name, email, password, membership, saldo) VALUES
+('John Doe', 'regular@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Regular', 500000.00),
+('Jane Smith', 'vip@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'VIP', 1000000.00),
+('Admin User', 'admin@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'VVIP', 2000000.00);
