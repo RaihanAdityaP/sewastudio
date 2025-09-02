@@ -18,13 +18,12 @@ if (!$studio) {
     die("Studio tidak ditemukan");
 }
 
-// Check if user can access this studio (with fallback for older user objects)
+// Cek akses membership
 $canAccess = false;
 if (method_exists($user, 'canAccessStudio')) {
     $canAccess = $user->canAccessStudio($id);
 } else {
-    // Fallback logic
-    switch($user->getMembership()) {
+    switch ($user->getMembership()) {
         case 'Regular':
             $canAccess = ($id == 1);
             break;
@@ -44,19 +43,20 @@ if (!$canAccess) {
 $info = [];
 $message = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $date = $_POST["date"];
-    $time = $_POST["time"];
+// Proses booking
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $date     = $_POST["date"];
+    $time     = $_POST["time"];
     $duration = (int) $_POST["duration"];
     $datetime = $date . " " . $time;
 
     $booking = new Booking(uniqid(), $studio, $user, $datetime, $duration);
+
     try {
         $saldoAkhir = $booking->processPayment();
-        $info = $booking->getBookingInfo();
-        $message = "Pembayaran berhasil. Saldo akhir: Rp " . number_format($saldoAkhir, 0, ',', '.');
-        
-        // Update session with new saldo
+        $info       = $booking->getBookingInfo();
+        $message    = "Pembayaran berhasil. Saldo akhir: Rp " . number_format($saldoAkhir, 0, ',', '.');
+
         $_SESSION["user"]["saldo"] = $saldoAkhir;
     } catch (Exception $e) {
         $message = "Gagal: " . $e->getMessage();
@@ -75,6 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            
             <h2 class="text-center mb-4 bg-dark text-white py-3 rounded">Booking Studio</h2>
 
             <div class="card shadow-sm">
@@ -84,26 +85,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <p><strong>Membership:</strong> <?= $user->getMembership(); ?></p>
                     <p><strong>Saldo Anda:</strong> Rp <?= number_format($user->getSaldo(), 0, ',', '.'); ?></p>
                     
-                    <!-- Pricing Info -->
-                    <div class="alert alert-info">
-                        <strong>Informasi Harga:</strong><br>
-                        - Harga dasar: Rp <?= number_format($studio->getPrice(), 0, ',', '.'); ?>/jam<br>
-                        - Jam 17:00-22:00: +20%<br>
-                        - Jam 22:00-08:00: +10%<br>
-                        <?php if (method_exists($user, 'getDiscount') && $user->getDiscount() > 0): ?>
-                            - Diskon membership: <?= ($user->getDiscount() * 100); ?>%<br>
-                        <?php endif; ?>
-                        <?php if (method_exists($user, 'getCashback') && $user->getCashback() > 0): ?>
-                            - Cashback: <?= ($user->getCashback() * 100); ?>%<br>
-                        <?php endif; ?>
+                    <!-- Informasi Harga (collapse) -->
+                    <p>
+                        <button class="btn btn-outline-dark btn-sm" type="button" 
+                                data-bs-toggle="collapse" 
+                                data-bs-target="#hargaInfo" 
+                                aria-expanded="false" 
+                                aria-controls="hargaInfo">
+                            Lihat Informasi Harga
+                        </button>
+                    </p>
+                    <div class="collapse" id="hargaInfo">
+                        <div class="alert alert-info">
+                            <strong>Informasi Harga:</strong><br>
+                            - Harga dasar: Rp <?= number_format($studio->getPrice(), 0, ',', '.'); ?>/jam<br>
+                            - Jam 17:00-22:00: +20%<br>
+                            - Jam 22:00-08:00: +10%<br>
+                            <?php if (method_exists($user, 'getDiscount') && $user->getDiscount() > 0): ?>
+                                - Diskon membership: <?= ($user->getDiscount() * 100); ?>%<br>
+                            <?php endif; ?>
+                            <?php if (method_exists($user, 'getCashback') && $user->getCashback() > 0): ?>
+                                - Cashback: <?= ($user->getCashback() * 100); ?>%<br>
+                            <?php endif; ?>
+                        </div>
                     </div>
 
+                    <!-- Pesan sukses / gagal -->
                     <?php if ($message): ?>
                         <div class="alert <?= strpos($message, 'berhasil') !== false ? 'alert-success' : 'alert-danger'; ?>">
                             <?= $message; ?>
                         </div>
                     <?php endif; ?>
 
+                    <!-- Form Booking -->
                     <form method="POST">
                         <div class="mb-3">
                             <label for="date" class="form-label">Tanggal</label>
@@ -125,6 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </div>
 
+            <!-- Ringkasan Booking -->
             <?php if (!empty($info)): ?>
                 <div class="card mt-4">
                     <div class="card-body">
@@ -147,6 +162,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
